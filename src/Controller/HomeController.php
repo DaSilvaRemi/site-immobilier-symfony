@@ -2,34 +2,21 @@
 
 namespace App\Controller;
 
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
-use Twig\Environment;
-use Twig\Error\LoaderError;
-use Twig\Error\RuntimeError;
-use Twig\Error\SyntaxError;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
  *
  */
-class HomeController
+class HomeController extends AbstractController
 {
-    /**
-     * @var Environment
-     */
-    private $twig;
-
-    public function __construct(Environment $twig)
-    {
-        $this->twig = $twig;
-    }
 
     /**
+     * @Route("/", name="home")
      * @return Response
-     * @throws LoaderError
-     * @throws RuntimeError
-     * @throws SyntaxError
      */
     public function index(): Response{
-        return new Response($this->twig->render('/pages/home.html.twig'));
+        return $this->render('/pages/home.html.twig');
     }
 }
