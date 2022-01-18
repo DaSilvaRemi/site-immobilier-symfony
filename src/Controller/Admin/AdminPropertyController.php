@@ -42,9 +42,33 @@ class AdminPropertyController extends AbstractController
     }
 
     /**
+     * @Route("/admin/property/create", name="admin.property.create")
+     * @param Request $request
+     * @return Response
+     */
+    public function create(Request $request): Response{
+        $property = new Property();
+        $form = $this->createForm(PropertyType::class, $property);
+        $form->handleRequest($request);
+
+        //If the form was submit and all fields are valid, so we update the DB and we redirect the user
+        if ($form->isSubmitted() && $form->isValid()){
+            $this->em->persist($property);
+            $this->em->flush();
+            $this->addFlash('success', 'Bien modifié avec succès');
+            return $this->redirectToRoute('admin.property.index');
+        }
+
+        return $this->render('admin/property/create.html.twig', [
+            'property' => $property,
+            'form' => $form->createView()
+        ]);
+    }
+
+    /**
      * Edit a Property
      *
-     * @Route("/admin/edit/{id}", name="admin.property.edit")
+     * @Route("/admin/property/edit/{id}", name="admin.property.edit", methods={"GET", "POST"})
      * @param Property $property The property get with the request params ID
      * @param Request $request The HTTP request
      * @return Response The TWIG edit view or the index view
@@ -57,6 +81,7 @@ class AdminPropertyController extends AbstractController
         //If the form was submit and all fields are valid, so we update the DB and we redirect the user
         if ($form->isSubmitted() && $form->isValid()){
             $this->em->flush();
+            $this->addFlash('success', 'Bien créer avec succès');
             return $this->redirectToRoute('admin.property.index');
         }
 
@@ -64,5 +89,22 @@ class AdminPropertyController extends AbstractController
             'property' => $property,
             'form' => $form->createView()
         ]);
+    }
+
+    /**
+     * @Route("/admin/property/delete/{id}", name="admin.property.delete", methods={"GET", "POST", "DELETE"})
+     * @param Property $property
+     * @param Request $request
+     * @return Response
+     */
+    public function delete(Property $property, Request $request): Response
+    {
+        if($request->get('_method') == "DELETE" && $this->isCsrfTokenValid('delete' . $property->getId(), $request->get('_token'))){
+            $this->em->remove($property);
+            $this->em->flush();
+            $this->addFlash('success', 'Bien supprimé avec succès');
+        }
+
+        return $this->redirectToRoute('admin.property.index');
     }
 }
