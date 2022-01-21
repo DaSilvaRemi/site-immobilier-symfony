@@ -4,13 +4,15 @@ namespace App\Entity;
 
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
-use Exception;
-use JetBrains\PhpStorm\Internal\LanguageLevelTypeAware;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
+ * @UniqueEntity("username")
  */
 class User implements UserInterface, PasswordAuthenticatedUserInterface, \Serializable
 {
@@ -21,8 +23,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \Serial
      */
     private $id;
 
+    const ROLES = ['ADMIN' => 'ROLE_ADMIN', 'USER' => 'ROLE_USER'];
+
     /**
      * @ORM\Column(type="string", length=180, unique=true)
+     * @Assert\Length(min=2, max=180)
      */
     private $username;
 
@@ -34,8 +39,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \Serial
     /**
      * @var string The hashed password
      * @ORM\Column(type="string")
+     * @Assert\Length(min=4)
      */
     private $password;
+
+
+    public function __construct()
+    {
+        $this->setRoles(['ROLE_USER']);
+    }
 
     public function getId(): ?int
     {
@@ -99,6 +111,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \Serial
         $this->password = $password;
 
         return $this;
+    }
+
+    /**
+     * @param string $plainPassword
+     * @param UserPasswordHasherInterface $userPasswordHasher
+     * @return $this
+     */
+    public function setPasswordHashed(string $plainPassword, UserPasswordHasherInterface $userPasswordHasher): self{
+        return $this->setPassword($userPasswordHasher->hashPassword($this, $plainPassword));
     }
 
     /**
