@@ -2,6 +2,7 @@
 
 namespace App\Form;
 
+use App\Entity\ChoiceTypeUtils;
 use App\Entity\Property;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -55,13 +56,6 @@ class PropertyType extends AbstractType
      */
     private function getChoices(): array
     {
-        $choices = Property::HEAT;
-        $output = [];
-
-        foreach ($choices as $k => $v){
-            $output[$v] = $k;
-        }
-
-        return $output;
+        return ChoiceTypeUtils::getChoices(Property::HEAT);
     }
 }
