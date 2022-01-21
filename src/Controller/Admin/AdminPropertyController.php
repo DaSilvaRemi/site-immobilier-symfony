@@ -30,7 +30,7 @@ class AdminPropertyController extends AbstractController
     }
 
     /**
-     * @Route("/admin", name="admin.property.index")
+     * @Route("/admin/property/index", name="admin.property.index")
      * @return Response
      */
     public function index(): Response
@@ -81,7 +81,7 @@ class AdminPropertyController extends AbstractController
         //If the form was submit and all fields are valid, so we update the DB and we redirect the user
         if ($form->isSubmitted() && $form->isValid()){
             $this->em->flush();
-            $this->addFlash('success', 'Bien créer avec succès');
+            $this->addFlash('success', 'Bien édité avec succès');
             return $this->redirectToRoute('admin.property.index');
         }
 
