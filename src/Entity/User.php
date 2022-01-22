@@ -23,7 +23,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \Serial
      */
     private $id;
 
-    const ROLES = ['ADMIN' => 'ROLE_ADMIN', 'USER' => 'ROLE_USER'];
+    const ROLES = [
+        'ROLE_ADMIN' => 'ROLE_ADMIN',
+        'ROLE_USER' => 'ROLE_USER'
+    ];
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
@@ -43,6 +46,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \Serial
      */
     private $password;
 
+    /**
+     * @var string
+     */
+    private $plainPassword;
 
     public function __construct()
     {
@@ -86,7 +93,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \Serial
     {
         $roles = $this->roles;
         // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_ADMIN';
+        $roles[] = 'ROLE_USER';
 
         return array_unique($roles);
     }
@@ -96,6 +103,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \Serial
         $this->roles = $roles;
 
         return $this;
+    }
+
+    public function GetIsAdmin(): bool
+    {
+        return in_array('ROLE_ADMIN', $this->getRoles());
     }
 
     /**
@@ -110,6 +122,24 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \Serial
     {
         $this->password = $password;
 
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPlainPassword(): ?string
+    {
+        return $this->plainPassword;
+    }
+
+    /**
+     * @param string $plainPassword
+     * @return User
+     */
+    public function setPlainPassword(string $plainPassword): self
+    {
+        $this->plainPassword = $plainPassword;
         return $this;
     }
 
@@ -138,8 +168,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \Serial
      */
     public function eraseCredentials()
     {
-        // If you store any temporary, sensitive data on the user, clear it here
-        // $this->plainPassword = null;
+        $this->plainPassword = null;
     }
 
     /**

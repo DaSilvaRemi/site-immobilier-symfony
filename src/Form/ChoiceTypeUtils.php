@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Entity;
+namespace App\Form;
 
 class ChoiceTypeUtils
 {
@@ -14,7 +14,6 @@ class ChoiceTypeUtils
         foreach ($choices as $k => $v){
             $output[$v] = $k;
         }
-
         return $output;
     }
 }

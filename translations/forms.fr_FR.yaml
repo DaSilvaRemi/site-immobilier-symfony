@@ -15,3 +15,6 @@ Gaz: Gaz
 Fuel: Pétrole
 Username: Nom d'utilisateur
 Password: Mot de passe
+Roles: Roles
+ROLE_ADMIN: Role administrateur
+ROLE_USER: Role utilisateur

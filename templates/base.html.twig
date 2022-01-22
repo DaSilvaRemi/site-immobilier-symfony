@@ -39,7 +39,7 @@
                     <a class="nav-link {% if property_menu is defined and property_menu == 'properties' %} active {% endif %}"
                        aria-current="page" href="{{ path('property.index') }}">Acheter</a>
                 </li>
-                {% if app.user %}
+                {% if app.user and app.user.isAdmin %}
                     <li class="nav-item">
                         <a href="{{ path('admin.property.index') }}" aria-current="page"
                            class="nav-link {% if admin_menu is defined and admin_menu == 'admin.property.index' %} active {% endif %}">Admin : Les propriétés</a>

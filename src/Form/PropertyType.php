@@ -2,7 +2,6 @@
 
 namespace App\Form;
 
-use App\Entity\ChoiceTypeUtils;
 use App\Entity\Property;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;

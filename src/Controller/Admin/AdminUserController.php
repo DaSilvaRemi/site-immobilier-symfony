@@ -4,7 +4,6 @@ namespace App\Controller\Admin;
 
 use App\Entity\User;
 use App\Form\UserAdminType;
-use App\Form\UserType;
 use App\Repository\UserRepository;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -69,7 +68,8 @@ class AdminUserController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()){
-            $user->setPasswordHashed($user->getPassword(), $this->userPasswordHasher);
+            $user = $form->getData();
+            $user->setPasswordHashed($user->getPlainPassword(), $this->userPasswordHasher);
             $this->manager->persist($user);
             $this->manager->flush();
             $this->addFlash('success', 'Utilisateur crée avec succès');
@@ -79,12 +79,12 @@ class AdminUserController extends AbstractController
         return $this->render('admin/users/create.html.twig', [
             'user' => $user,
             'admin_menu' => 'admin.users.create',
-            'form' => $form
+            'form' => $form->createView()
         ]);
     }
 
     /**
-     * @Route("admin/users/edit/{id}"), name="admin.users.edit")
+     * @Route("admin/users/edit/{id}", name="admin.users.edit")
      * @param User $user
      * @param Request $request
      * @return Response
@@ -94,7 +94,13 @@ class AdminUserController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()){
-            $user->setPasswordHashed($user->getPassword(), $this->userPasswordHasher);
+            $tmpUser = $form->getData();
+            var_dump($tmpUser);
+
+            if($tmpUser->getPlainPassword() !== null){
+                $user->setPasswordHashed($tmpUser->getPlainPassword(), $this->userPasswordHasher);
+            }
+
             $this->manager->flush();
             $this->addFlash('success', 'Utilisateur édité avec succès');
             return $this->redirectToRoute('admin.users.index');
@@ -102,7 +108,7 @@ class AdminUserController extends AbstractController
 
         return $this->render('admin/users/edit.html.twig', [
             'user' => $user,
-            'form' => $form
+            'form' => $form->createView()
         ]);
     }
 
