@@ -30,8 +30,9 @@ class PropertyRepository extends ServiceEntityRepository
 
     /**
      * @return Query
+     * TODO Permettre la recherche avec l'entité recherche (condition where) // AJOUTER UN PARAM
      */
-    public function findAllVisibleQuery(): Query
+    public function findAllVisibleQuery($searchData): Query
     {
         return $this->findVisibleQuery()->getQuery();
     }
