@@ -3,6 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Entity\User;
+use App\Form\UserAdminType;
 use App\Form\UserType;
 use App\Repository\UserRepository;
 use Doctrine\Persistence\ObjectManager;
@@ -52,7 +53,8 @@ class AdminUserController extends AbstractController
     {
         $users = $this->userRepository->findAll();
         return $this->render('admin/users/index.html.twig', [
-            'users' => $users
+            'users' => $users,
+            'admin_menu' => 'admin.users.index',
         ]);
     }
 
@@ -63,7 +65,7 @@ class AdminUserController extends AbstractController
      */
     public function create(Request $request): Response{
         $user = new User();
-        $form = $this->createForm(UserType::class, $user);
+        $form = $this->createForm(UserAdminType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()){
@@ -76,6 +78,7 @@ class AdminUserController extends AbstractController
 
         return $this->render('admin/users/create.html.twig', [
             'user' => $user,
+            'admin_menu' => 'admin.users.create',
             'form' => $form
         ]);
     }
@@ -87,7 +90,7 @@ class AdminUserController extends AbstractController
      * @return Response
      */
     public function edit(User $user, Request $request): Response{
-        $form = $this->createForm(UserType::class, $user);
+        $form = $this->createForm(UserAdminType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()){
