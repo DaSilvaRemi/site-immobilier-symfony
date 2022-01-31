@@ -43,8 +43,12 @@ class PropertyController extends AbstractController
      * @return Response
      */
     public function index(PaginatorInterface $paginator, Request $request): Response{
+        //TODO Créer une entité qui va représenter notre recherche (Prix max, nb Pièces min)
+        //TODO Créer un formulaire représentant notre recherche
+        //TODO gérer le traitement dans le controller(index)
+
         $properties = $paginator->paginate(
-            $this->repository->findAllVisibleQuery(),
+            $this->repository->findAllVisibleQuery(/* TODO AJOUTER PARAM RECHERCHE*/),
             $request->query->getInt('page', 1),
             12
         );
