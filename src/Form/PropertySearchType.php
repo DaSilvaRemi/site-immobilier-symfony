@@ -28,9 +28,6 @@ class PropertySearchType extends AbstractType
                     'placeholder' => 'Surface minimale'
                 ]
             ])
-            ->add('submit', SubmitType::class, [
-                'label' => 'Search'
-            ])
         ;
     }
 
@@ -38,8 +35,14 @@ class PropertySearchType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => PropertySearch::class,
-            'methods' => 'get',
-            'csrf_protection' => false
+            'method' => 'get',
+            'csrf_protection' => false,
+            'translation_domain' => 'forms'
         ]);
+    }
+
+    public function getBlockPrefix()
+    {
+        return '';
     }
 }
